@@ -44,6 +44,18 @@
             kryptonSplitContainer1.Panel2.BeginInit();
             SuspendLayout();
             // 
+            // separatorSpec1
+            // 
+            separatorSpec1.Enabled = Krypton.Toolkit.ButtonEnabled.False;
+            separatorSpec1.Text = "|";
+            separatorSpec1.UniqueName = "130fa65e20fe4b078ae8f485b32f65b4";
+            // 
+            // separatorSpec2
+            // 
+            separatorSpec2.Enabled = Krypton.Toolkit.ButtonEnabled.False;
+            separatorSpec2.Text = "|";
+            separatorSpec2.UniqueName = "bc86696da8cb4fa7aaa7068a0d87413d";
+            // 
             // splitButtonSpec
             // 
             splitButtonSpec.Text = "Split";
@@ -82,23 +94,11 @@
             debugButtonSpec.Type = Krypton.Toolkit.PaletteButtonSpecStyle.ArrowUp;
             debugButtonSpec.UniqueName = "4f61a1ebf5734e238dd050b0a783cf2b";
             // 
-            // separatorSpec1
-            // 
-            separatorSpec1.Enabled = Krypton.Toolkit.ButtonEnabled.False;
-            separatorSpec1.Text = "|";
-            separatorSpec1.UniqueName = "130fa65e20fe4b078ae8f485b32f65b4";
-            // 
             // settingsButtonSpec
             // 
             settingsButtonSpec.Text = "Settings";
-            settingsButtonSpec.Type = Krypton.Toolkit.PaletteButtonSpecStyle.Context;
+            settingsButtonSpec.Type = Krypton.Toolkit.PaletteButtonSpecStyle.ArrowUp;
             settingsButtonSpec.UniqueName = "0803b6234d694ce09244a6f99b7115b5";
-            // 
-            // separatorSpec2
-            // 
-            separatorSpec2.Enabled = Krypton.Toolkit.ButtonEnabled.False;
-            separatorSpec2.Text = "|";
-            separatorSpec2.UniqueName = "bc86696da8cb4fa7aaa7068a0d87413d";
             // 
             // aotButtonSpec
             // 
