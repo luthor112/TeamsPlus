@@ -33,6 +33,8 @@ namespace TeamsPlus
         ChromiumWebBrowser browser;
         ChromiumWebBrowser sideBrowser;
 
+        bool firstLoad = true;
+
         public Form1()
         {
             rootCache = Path.Join(Path.GetTempPath(), "TeamsPlusCefRoot");
@@ -62,6 +64,7 @@ namespace TeamsPlus
             };
             settings.CefCommandLineArgs.Add("enable-media-stream");
             settings.CefCommandLineArgs.Add("use-fake-ui-for-media-stream");
+            //settings.CefCommandLineArgs.Add("use-fake-ui-for-media-stream", "1");
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
 
             if (!File.Exists(configFile))
@@ -150,6 +153,12 @@ namespace TeamsPlus
         {
             if (!e.IsLoading && browser.GetMainFrame().Url.StartsWith("https://teams.live.com/"))
             {
+                if (firstLoad)
+                {
+                    firstLoad = false;
+                    Thread.Sleep(1000);
+                }
+
                 bool cleanupUI = (GetOption("config", "cleanup", "true") == "true");
                 if (cleanupUI)
                 {
