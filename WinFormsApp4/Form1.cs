@@ -29,13 +29,42 @@ namespace TeamsPlus
             settings.CefCommandLineArgs.Add("use-fake-ui-for-media-stream");
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
 
+            settingsButtonSpec.Click += SettingsClicked;
+            debugButtonSpec.Click += DebugClicked;
+            aotButtonSpec.Click += aotClicked;
             splitButtonSpec.Click += SplitClicked;
             cloneButtonSpec.Click += CloneClicked;
 
-            AddBrowser();
+            AddMainBrowser();
         }
 
-        private void AddBrowser()
+        private void aotClicked(object? sender, EventArgs e)
+        {
+            TopMost = (aotButtonSpec.Checked == ButtonCheckState.Checked);
+        }
+
+        private void SettingsClicked(object? sender, EventArgs e)
+        {
+            // TODO
+            MessageBox.Show("TODO: Settings window");
+        }
+
+        private void DebugClicked(object? sender, EventArgs e)
+        {
+            browser.ShowDevTools();
+        }
+
+        private void SplitClicked(object? sender, EventArgs e)
+        {
+            SwitchSplit(false);
+        }
+
+        private void CloneClicked(object? sender, EventArgs e)
+        {
+            SwitchSplit(true);
+        }
+
+        private void AddMainBrowser()
         {
             IRequestContext ctx = RequestContext.Configure().WithCachePath(Path.Join(rootCache, "cache1")).Create();
 
@@ -48,16 +77,6 @@ namespace TeamsPlus
 
             //browser.ExecuteScriptAsyncWhenPageLoaded("alert('Hi!');", false);
             //browser.EvaluateScriptAsync("alert('Hi!');");
-        }
-
-        private void SplitClicked(object? sender, EventArgs e)
-        {
-            SwitchSplit(false);
-        }
-
-        private void CloneClicked(object? sender, EventArgs e)
-        {
-            SwitchSplit(true);
         }
 
         private void SwitchSplit(bool clone)
@@ -92,7 +111,7 @@ namespace TeamsPlus
 
         private void Browser_LoadingStateChanged(object? sender, LoadingStateChangedEventArgs e)
         {
-            
+            // TODO
         }
 
         private void Browser_TitleChanged(object? sender, TitleChangedEventArgs e)

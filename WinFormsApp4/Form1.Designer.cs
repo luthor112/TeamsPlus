@@ -28,10 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Krypton.Toolkit.ButtonSpecAny separatorSpec1;
+            Krypton.Toolkit.ButtonSpecAny separatorSpec2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             splitButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             kryptonSplitContainer1 = new Krypton.Toolkit.KryptonSplitContainer();
             cloneButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
+            debugButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
+            settingsButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
+            aotButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
+            separatorSpec1 = new Krypton.Toolkit.ButtonSpecAny();
+            separatorSpec2 = new Krypton.Toolkit.ButtonSpecAny();
             ((System.ComponentModel.ISupportInitialize)kryptonSplitContainer1).BeginInit();
             kryptonSplitContainer1.Panel1.BeginInit();
             kryptonSplitContainer1.Panel2.BeginInit();
@@ -40,7 +47,6 @@
             // splitButtonSpec
             // 
             splitButtonSpec.Text = "Split";
-            splitButtonSpec.ToolTipBody = "Yolo Button";
             splitButtonSpec.Type = Krypton.Toolkit.PaletteButtonSpecStyle.ArrowLeft;
             splitButtonSpec.UniqueName = "8509b9671da64e41908aa4fb1c6a32bc";
             // 
@@ -70,10 +76,47 @@
             cloneButtonSpec.Type = Krypton.Toolkit.PaletteButtonSpecStyle.ArrowLeft;
             cloneButtonSpec.UniqueName = "f3dca308ad6248e3ba1fef3969e2e4dc";
             // 
+            // debugButtonSpec
+            // 
+            debugButtonSpec.Text = "Debug";
+            debugButtonSpec.Type = Krypton.Toolkit.PaletteButtonSpecStyle.ArrowUp;
+            debugButtonSpec.UniqueName = "4f61a1ebf5734e238dd050b0a783cf2b";
+            // 
+            // separatorSpec1
+            // 
+            separatorSpec1.Enabled = Krypton.Toolkit.ButtonEnabled.False;
+            separatorSpec1.Text = "|";
+            separatorSpec1.UniqueName = "130fa65e20fe4b078ae8f485b32f65b4";
+            // 
+            // settingsButtonSpec
+            // 
+            settingsButtonSpec.Text = "Settings";
+            settingsButtonSpec.Type = Krypton.Toolkit.PaletteButtonSpecStyle.Context;
+            settingsButtonSpec.UniqueName = "0803b6234d694ce09244a6f99b7115b5";
+            // 
+            // separatorSpec2
+            // 
+            separatorSpec2.Enabled = Krypton.Toolkit.ButtonEnabled.False;
+            separatorSpec2.Text = "|";
+            separatorSpec2.UniqueName = "bc86696da8cb4fa7aaa7068a0d87413d";
+            // 
+            // aotButtonSpec
+            // 
+            aotButtonSpec.Checked = Krypton.Toolkit.ButtonCheckState.Unchecked;
+            aotButtonSpec.Text = "AOT";
+            aotButtonSpec.ToolTipBody = "Always on Top";
+            aotButtonSpec.UniqueName = "f90c677ca2ac421182c97bfa415d1e52";
+            // 
             // Form1
             // 
+            AllowButtonSpecToolTips = true;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            ButtonSpecs.Add(settingsButtonSpec);
+            ButtonSpecs.Add(separatorSpec1);
+            ButtonSpecs.Add(debugButtonSpec);
+            ButtonSpecs.Add(separatorSpec2);
+            ButtonSpecs.Add(aotButtonSpec);
             ButtonSpecs.Add(cloneButtonSpec);
             ButtonSpecs.Add(splitButtonSpec);
             ClientSize = new Size(1119, 675);
@@ -95,5 +138,10 @@
         private Krypton.Toolkit.ButtonSpecAny splitButtonSpec;
         private Krypton.Toolkit.KryptonSplitContainer kryptonSplitContainer1;
         private Krypton.Toolkit.ButtonSpecAny cloneButtonSpec;
+        private Krypton.Toolkit.ButtonSpecAny debugButtonSpec;
+        private Krypton.Toolkit.ButtonSpecAny separatorSpec1;
+        private Krypton.Toolkit.ButtonSpecAny settingsButtonSpec;
+        private Krypton.Toolkit.ButtonSpecAny separatorSpec2;
+        private Krypton.Toolkit.ButtonSpecAny aotButtonSpec;
     }
 }
