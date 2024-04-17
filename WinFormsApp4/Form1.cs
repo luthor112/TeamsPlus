@@ -117,7 +117,6 @@ namespace TeamsPlus
             kryptonSplitContainer1.Panel1.Controls.Add(browser);
             browser.LoadingStateChanged += Browser_LoadingStateChanged;
             browser.TitleChanged += Browser_TitleChanged;
-            //browser.RequestHandler = new RequestHandlerPlus();
             browser.LifeSpanHandler = new LifeSpanHandlerPlus();
         }
 
@@ -136,6 +135,7 @@ namespace TeamsPlus
                 sideBrowser.RequestContext = ctx;
                 sideBrowser.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
                 kryptonSplitContainer1.Panel2.Controls.Add(sideBrowser);
+                sideBrowser.LifeSpanHandler = new LifeSpanHandlerPlus();
 
                 kryptonSplitContainer1.Panel2Collapsed = false;
                 cloneButtonSpec.Visible = false;
