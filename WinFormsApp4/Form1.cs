@@ -117,6 +117,7 @@ namespace TeamsPlus
             kryptonSplitContainer1.Panel1.Controls.Add(browser);
             browser.LoadingStateChanged += Browser_LoadingStateChanged;
             browser.TitleChanged += Browser_TitleChanged;
+            //browser.RequestHandler
         }
 
         private void SwitchSplit(bool clone)
@@ -151,7 +152,8 @@ namespace TeamsPlus
 
         private void Browser_LoadingStateChanged(object? sender, LoadingStateChangedEventArgs e)
         {
-            if (!e.IsLoading && browser.GetMainFrame().Url.StartsWith("https://teams.live.com/"))
+            string pageURL = browser.GetMainFrame().Url;
+            if (!e.IsLoading && (pageURL.StartsWith("https://teams.live.com/") || pageURL.StartsWith("https://teams.microsoft.com/v2/")))
             {
                 if (firstLoad)
                 {
@@ -159,20 +161,34 @@ namespace TeamsPlus
                     Thread.Sleep(1000);
                 }
 
-                bool cleanupUI = (GetOption("config", "cleanup", "true") == "true");
-                if (cleanupUI)
+                if (pageURL.StartsWith("https://teams.live.com/"))
                 {
-                    browser.ExecuteScriptAsync("document.getElementsByTagName(\"app-bar-help-button\")[0].remove();");
-                    browser.ExecuteScriptAsync("document.getElementsByTagName(\"get-app-button\")[0].remove();");
-                }
+                    bool cleanupUI = (GetOption("config", "cleanup", "true") == "true");
+                    if (cleanupUI)
+                    {
+                        browser.ExecuteScriptAsync("document.getElementsByTagName(\"app-bar-help-button\")[0].remove();");
+                        browser.ExecuteScriptAsync("document.getElementsByTagName(\"get-app-button\")[0].remove();");
+                    }
 
-                string headerBg = GetOption("theme", "headerbg", "");
-                if (headerBg != "")
+                    string headerBg = GetOption("theme", "headerbg", "");
+                    if (headerBg != "")
+                    {
+                        if (headerBg[0] == '#')
+                            browser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.background = \"{headerBg}\";");
+                        else
+                            browser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.backgroundImage = \"url({headerBg})\";");
+                    }
+                }
+                else if (pageURL.StartsWith("https://teams.microsoft.com/v2/"))
                 {
-                    if (headerBg[0] == '#')
-                        browser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.background = \"{headerBg}\";");
-                    else
-                        browser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.backgroundImage = \"url({headerBg})\";");
+                    string headerBg = GetOption("theme", "headerbg", "");
+                    if (headerBg != "")
+                    {
+                        if (headerBg[0] == '#')
+                            browser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').children[0].children[0].style.background = \"{headerBg}\";");
+                        else
+                            browser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').children[0].children[0].style.backgroundImage = \"url({headerBg})\";");
+                    }
                 }
             }
         }
