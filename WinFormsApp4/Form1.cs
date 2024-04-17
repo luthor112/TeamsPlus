@@ -117,7 +117,8 @@ namespace TeamsPlus
             kryptonSplitContainer1.Panel1.Controls.Add(browser);
             browser.LoadingStateChanged += Browser_LoadingStateChanged;
             browser.TitleChanged += Browser_TitleChanged;
-            //browser.RequestHandler
+            //browser.RequestHandler = new RequestHandlerPlus();
+            browser.LifeSpanHandler = new LifeSpanHandlerPlus();
         }
 
         private void SwitchSplit(bool clone)
