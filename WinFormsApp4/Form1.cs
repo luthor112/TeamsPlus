@@ -8,6 +8,14 @@ using System.Text;
 
 namespace TeamsPlus
 {
+    internal enum SwitchType
+    {
+        Clone,
+        Secondary,
+        Temporary,
+        Close
+    }
+
     public partial class Form1 : KryptonForm
     {
         #region P/Invoke
@@ -76,17 +84,15 @@ namespace TeamsPlus
             settingsButtonSpec.Click += SettingsClicked;
             debugButtonSpec.Click += DebugClicked;
             aotButtonSpec.Click += aotClicked;
-            splitButtonSpec.Click += SplitClicked;
             cloneButtonSpec.Click += CloneClicked;
+            secondaryButtonSpec.Click += SecondaryClicked;
+            temporaryButtonSpec.Click += TemporaryClicked;
+            closeButtonSpec.Click += CloseClicked;
 
             AddMainBrowser();
         }
 
-        private void aotClicked(object? sender, EventArgs e)
-        {
-            TopMost = (aotButtonSpec.Checked == ButtonCheckState.Checked);
-        }
-
+        #region Titlebar buttons
         private void SettingsClicked(object? sender, EventArgs e)
         {
             Process.Start("explorer", $"\"{configFile}\"");
@@ -97,15 +103,31 @@ namespace TeamsPlus
             browser.ShowDevTools();
         }
 
-        private void SplitClicked(object? sender, EventArgs e)
+        private void aotClicked(object? sender, EventArgs e)
         {
-            SwitchSplit(false);
+            TopMost = (aotButtonSpec.Checked == ButtonCheckState.Checked);
         }
 
         private void CloneClicked(object? sender, EventArgs e)
         {
-            SwitchSplit(true);
+            SwitchSplit(SwitchType.Clone);
         }
+
+        private void SecondaryClicked(object? sender, EventArgs e)
+        {
+            SwitchSplit(SwitchType.Secondary);
+        }
+
+        private void TemporaryClicked(object? sender, EventArgs e)
+        {
+            SwitchSplit(SwitchType.Temporary);
+        }
+
+        private void CloseClicked(object? sender, EventArgs e)
+        {
+            SwitchSplit(SwitchType.Close);
+        }
+        #endregion
 
         private void AddMainBrowser()
         {
@@ -120,31 +142,50 @@ namespace TeamsPlus
             browser.LifeSpanHandler = new LifeSpanHandlerPlus();
         }
 
-        private void SwitchSplit(bool clone)
+        private void SwitchSplit(SwitchType switchType)
         {
             if (kryptonSplitContainer1.Panel2Collapsed)
             {
                 IRequestContext ctx = null;
 
-                if (clone)
-                    ctx = RequestContext.Configure().WithSharedSettings(browser.GetRequestContext()).Create();
-                else
-                    ctx = RequestContext.Configure().WithSharedSettings(Cef.GetGlobalRequestContext()).Create();
+                switch (switchType)
+                {
+                    case SwitchType.Clone:
+                        ctx = RequestContext.Configure().WithSharedSettings(browser.GetRequestContext()).Create();
+                        break;
+                    case SwitchType.Secondary:
+                        ctx = RequestContext.Configure().WithCachePath(Path.Join(rootCache, "cache2")).Create();
+                        break;
+                    case SwitchType.Temporary:
+                        ctx = RequestContext.Configure().WithSharedSettings(Cef.GetGlobalRequestContext()).Create();
+                        break;
+                    default:
+                        Debug.WriteLine("This should not happen!");
+                        return;
+                }
 
                 sideBrowser = new ChromiumWebBrowser("https://teams.microsoft.com");
                 sideBrowser.RequestContext = ctx;
                 sideBrowser.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
                 kryptonSplitContainer1.Panel2.Controls.Add(sideBrowser);
+                sideBrowser.LoadingStateChanged += Browser_LoadingStateChanged;
                 sideBrowser.LifeSpanHandler = new LifeSpanHandlerPlus();
 
                 kryptonSplitContainer1.Panel2Collapsed = false;
                 cloneButtonSpec.Visible = false;
-                splitButtonSpec.Type = PaletteButtonSpecStyle.ArrowRight;
+                secondaryButtonSpec.Visible = false;
+                temporaryButtonSpec.Visible = false;
+                closeButtonSpec.Visible = true;
             }
             else
             {
+                if (switchType != SwitchType.Close)
+                    Debug.WriteLine("This should not happen!");
+
                 cloneButtonSpec.Visible = true;
-                splitButtonSpec.Type = PaletteButtonSpecStyle.ArrowLeft;
+                secondaryButtonSpec.Visible = true;
+                temporaryButtonSpec.Visible = true;
+                closeButtonSpec.Visible = false;
                 kryptonSplitContainer1.Panel2Collapsed = true;
                 kryptonSplitContainer1.Panel2.Controls.Clear();
                 sideBrowser.Dispose();
@@ -153,7 +194,9 @@ namespace TeamsPlus
 
         private void Browser_LoadingStateChanged(object? sender, LoadingStateChangedEventArgs e)
         {
-            string pageURL = browser.GetMainFrame().Url;
+            ChromiumWebBrowser currentBrowser = (ChromiumWebBrowser)sender;
+
+            string pageURL = currentBrowser.GetMainFrame().Url;
             if (!e.IsLoading && (pageURL.StartsWith("https://teams.live.com/") || pageURL.StartsWith("https://teams.microsoft.com/v2/")))
             {
                 if (firstLoad)
@@ -167,17 +210,17 @@ namespace TeamsPlus
                     bool cleanupUI = (GetOption("config", "cleanup", "true") == "true");
                     if (cleanupUI)
                     {
-                        browser.ExecuteScriptAsync("document.getElementsByTagName(\"app-bar-help-button\")[0].remove();");
-                        browser.ExecuteScriptAsync("document.getElementsByTagName(\"get-app-button\")[0].remove();");
+                        currentBrowser.ExecuteScriptAsync("document.getElementsByTagName(\"app-bar-help-button\")[0].remove();");
+                        currentBrowser.ExecuteScriptAsync("document.getElementsByTagName(\"get-app-button\")[0].remove();");
                     }
 
                     string headerBg = GetOption("theme", "headerbg", "");
                     if (headerBg != "")
                     {
                         if (headerBg[0] == '#')
-                            browser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.background = \"{headerBg}\";");
+                            currentBrowser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.background = \"{headerBg}\";");
                         else
-                            browser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.backgroundImage = \"url({headerBg})\";");
+                            currentBrowser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.backgroundImage = \"url({headerBg})\";");
                     }
                 }
                 else if (pageURL.StartsWith("https://teams.microsoft.com/v2/"))
@@ -186,9 +229,9 @@ namespace TeamsPlus
                     if (headerBg != "")
                     {
                         if (headerBg[0] == '#')
-                            browser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').children[0].children[0].style.background = \"{headerBg}\";");
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').children[0].children[0].style.background = \"{headerBg}\";");
                         else
-                            browser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').children[0].children[0].style.backgroundImage = \"url({headerBg})\";");
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').children[0].children[0].style.backgroundImage = \"url({headerBg})\";");
                     }
                 }
             }
