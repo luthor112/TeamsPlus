@@ -42,6 +42,7 @@ namespace TeamsPlus
         ChromiumWebBrowser sideBrowser;
 
         bool firstLoad = true;
+        bool switchFirstLoad = true;
 
         public Form1()
         {
@@ -189,32 +190,46 @@ namespace TeamsPlus
                 kryptonSplitContainer1.Panel2Collapsed = true;
                 kryptonSplitContainer1.Panel2.Controls.Clear();
                 sideBrowser.Dispose();
+
+                switchFirstLoad = true;
             }
         }
 
         private void Browser_LoadingStateChanged(object? sender, LoadingStateChangedEventArgs e)
         {
             ChromiumWebBrowser currentBrowser = (ChromiumWebBrowser)sender;
+            bool isSecondary = (currentBrowser != browser);
 
             string pageURL = currentBrowser.GetMainFrame().Url;
             if (!e.IsLoading && (pageURL.StartsWith("https://teams.live.com/") || pageURL.StartsWith("https://teams.microsoft.com/v2/")))
             {
-                if (firstLoad)
+                if (firstLoad && !isSecondary)
                 {
                     firstLoad = false;
                     Thread.Sleep(1000);
                 }
+                else if (switchFirstLoad && isSecondary)
+                {
+                    switchFirstLoad = false;
+                    Thread.Sleep(1000);
+                }
+
+                bool cleanupUI = (GetOption("config", "cleanup", "true") == "true");
+                string headerBg = GetOption("theme", "headerbg", "");
+
+                if (isSecondary && GetOption("config", "cleanup-secondary", "") != "")
+                    cleanupUI = (GetOption("config", "cleanup-secondary", "true") == "true");
+                if (isSecondary && GetOption("theme", "headerbg-secondary", "") != "")
+                    headerBg = GetOption("theme", "headerbg-secondary", "");
 
                 if (pageURL.StartsWith("https://teams.live.com/"))
                 {
-                    bool cleanupUI = (GetOption("config", "cleanup", "true") == "true");
                     if (cleanupUI)
                     {
                         currentBrowser.ExecuteScriptAsync("document.getElementsByTagName(\"app-bar-help-button\")[0].remove();");
                         currentBrowser.ExecuteScriptAsync("document.getElementsByTagName(\"get-app-button\")[0].remove();");
                     }
 
-                    string headerBg = GetOption("theme", "headerbg", "");
                     if (headerBg != "")
                     {
                         if (headerBg[0] == '#')
@@ -225,7 +240,6 @@ namespace TeamsPlus
                 }
                 else if (pageURL.StartsWith("https://teams.microsoft.com/v2/"))
                 {
-                    string headerBg = GetOption("theme", "headerbg", "");
                     if (headerBg != "")
                     {
                         if (headerBg[0] == '#')
