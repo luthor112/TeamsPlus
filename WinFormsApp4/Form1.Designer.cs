@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             Krypton.Toolkit.ButtonSpecAny separatorSpec1;
+            Krypton.Toolkit.ButtonSpecAny separatorSpec2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             secondaryButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             kryptonSplitContainer1 = new Krypton.Toolkit.KryptonSplitContainer();
@@ -38,7 +39,9 @@
             aotButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             temporaryButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             closeButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
+            focusButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             separatorSpec1 = new Krypton.Toolkit.ButtonSpecAny();
+            separatorSpec2 = new Krypton.Toolkit.ButtonSpecAny();
             ((System.ComponentModel.ISupportInitialize)kryptonSplitContainer1).BeginInit();
             kryptonSplitContainer1.Panel1.BeginInit();
             kryptonSplitContainer1.Panel2.BeginInit();
@@ -115,6 +118,19 @@
             closeButtonSpec.UniqueName = "beddc3cf19dd446d815b62c564ee04f6";
             closeButtonSpec.Visible = false;
             // 
+            // separatorSpec2
+            // 
+            separatorSpec2.Enabled = Krypton.Toolkit.ButtonEnabled.False;
+            separatorSpec2.Text = "|";
+            separatorSpec2.UniqueName = "b2d458ac50d649a89e2ac1ccd121a2d9";
+            // 
+            // focusButtonSpec
+            // 
+            focusButtonSpec.Checked = Krypton.Toolkit.ButtonCheckState.Unchecked;
+            focusButtonSpec.Text = "Focus";
+            focusButtonSpec.ToolTipBody = "Focus on the first video feed";
+            focusButtonSpec.UniqueName = "afe36fb659914bdbb00437fbce7c991b";
+            // 
             // Form1
             // 
             AllowButtonSpecToolTips = true;
@@ -123,7 +139,9 @@
             ButtonSpecs.Add(settingsButtonSpec);
             ButtonSpecs.Add(debugButtonSpec);
             ButtonSpecs.Add(separatorSpec1);
+            ButtonSpecs.Add(focusButtonSpec);
             ButtonSpecs.Add(aotButtonSpec);
+            ButtonSpecs.Add(separatorSpec2);
             ButtonSpecs.Add(cloneButtonSpec);
             ButtonSpecs.Add(secondaryButtonSpec);
             ButtonSpecs.Add(temporaryButtonSpec);
@@ -153,5 +171,6 @@
         private Krypton.Toolkit.ButtonSpecAny aotButtonSpec;
         private Krypton.Toolkit.ButtonSpecAny temporaryButtonSpec;
         private Krypton.Toolkit.ButtonSpecAny closeButtonSpec;
+        private Krypton.Toolkit.ButtonSpecAny focusButtonSpec;
     }
 }

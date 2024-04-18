@@ -84,6 +84,7 @@ namespace TeamsPlus
 
             settingsButtonSpec.Click += SettingsClicked;
             debugButtonSpec.Click += DebugClicked;
+            focusButtonSpec.Click += FocusClicked;
             aotButtonSpec.Click += aotClicked;
             cloneButtonSpec.Click += CloneClicked;
             secondaryButtonSpec.Click += SecondaryClicked;
@@ -102,6 +103,14 @@ namespace TeamsPlus
         private void DebugClicked(object? sender, EventArgs e)
         {
             browser.ShowDevTools();
+        }
+
+        private void FocusClicked(object? sender, EventArgs e)
+        {
+            if (focusButtonSpec.Checked == ButtonCheckState.Checked)
+                browser.ExecuteScriptAsync("document.getElementsByTagName(\"video\")[0].requestFullscreen();");
+            else
+                browser.ExecuteScriptAsync("document.exitFullscreen();");
         }
 
         private void aotClicked(object? sender, EventArgs e)
