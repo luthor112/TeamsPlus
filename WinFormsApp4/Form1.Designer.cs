@@ -40,6 +40,7 @@
             temporaryButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             closeButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             focusButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
+            focusSecondarySpec = new Krypton.Toolkit.ButtonSpecAny();
             separatorSpec1 = new Krypton.Toolkit.ButtonSpecAny();
             separatorSpec2 = new Krypton.Toolkit.ButtonSpecAny();
             ((System.ComponentModel.ISupportInitialize)kryptonSplitContainer1).BeginInit();
@@ -52,6 +53,12 @@
             separatorSpec1.Enabled = Krypton.Toolkit.ButtonEnabled.False;
             separatorSpec1.Text = "|";
             separatorSpec1.UniqueName = "130fa65e20fe4b078ae8f485b32f65b4";
+            // 
+            // separatorSpec2
+            // 
+            separatorSpec2.Enabled = Krypton.Toolkit.ButtonEnabled.False;
+            separatorSpec2.Text = "|";
+            separatorSpec2.UniqueName = "b2d458ac50d649a89e2ac1ccd121a2d9";
             // 
             // secondaryButtonSpec
             // 
@@ -118,18 +125,20 @@
             closeButtonSpec.UniqueName = "beddc3cf19dd446d815b62c564ee04f6";
             closeButtonSpec.Visible = false;
             // 
-            // separatorSpec2
-            // 
-            separatorSpec2.Enabled = Krypton.Toolkit.ButtonEnabled.False;
-            separatorSpec2.Text = "|";
-            separatorSpec2.UniqueName = "b2d458ac50d649a89e2ac1ccd121a2d9";
-            // 
             // focusButtonSpec
             // 
             focusButtonSpec.Checked = Krypton.Toolkit.ButtonCheckState.Unchecked;
             focusButtonSpec.Text = "Focus";
             focusButtonSpec.ToolTipBody = "Focus on the first video feed";
             focusButtonSpec.UniqueName = "afe36fb659914bdbb00437fbce7c991b";
+            // 
+            // focusSecondarySpec
+            // 
+            focusSecondarySpec.Checked = Krypton.Toolkit.ButtonCheckState.Unchecked;
+            focusSecondarySpec.Text = "Focus Secondary";
+            focusSecondarySpec.ToolTipBody = "Focus on the first video feed of the secondary instance";
+            focusSecondarySpec.UniqueName = "168ceb6afd864b3c832b126e50c74bcd";
+            focusSecondarySpec.Visible = false;
             // 
             // Form1
             // 
@@ -140,6 +149,7 @@
             ButtonSpecs.Add(debugButtonSpec);
             ButtonSpecs.Add(separatorSpec1);
             ButtonSpecs.Add(focusButtonSpec);
+            ButtonSpecs.Add(focusSecondarySpec);
             ButtonSpecs.Add(aotButtonSpec);
             ButtonSpecs.Add(separatorSpec2);
             ButtonSpecs.Add(cloneButtonSpec);
@@ -172,5 +182,6 @@
         private Krypton.Toolkit.ButtonSpecAny temporaryButtonSpec;
         private Krypton.Toolkit.ButtonSpecAny closeButtonSpec;
         private Krypton.Toolkit.ButtonSpecAny focusButtonSpec;
+        private Krypton.Toolkit.ButtonSpecAny focusSecondarySpec;
     }
 }

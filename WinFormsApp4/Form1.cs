@@ -107,10 +107,15 @@ namespace TeamsPlus
 
         private void FocusClicked(object? sender, EventArgs e)
         {
-            if (focusButtonSpec.Checked == ButtonCheckState.Checked)
-                browser.ExecuteScriptAsync("document.getElementsByTagName(\"video\")[0].requestFullscreen();");
+            ButtonSpecAny clickedButton = (ButtonSpecAny)sender;
+            bool isSecondary = (clickedButton != focusButtonSpec);
+
+            ChromiumWebBrowser currentBrowser = isSecondary ? sideBrowser : browser;
+
+            if (clickedButton.Checked == ButtonCheckState.Checked)
+                currentBrowser.ExecuteScriptAsync("document.getElementsByTagName(\"video\")[0].requestFullscreen();");
             else
-                browser.ExecuteScriptAsync("document.exitFullscreen();");
+                currentBrowser.ExecuteScriptAsync("document.exitFullscreen();");
         }
 
         private void aotClicked(object? sender, EventArgs e)
@@ -186,12 +191,14 @@ namespace TeamsPlus
                 secondaryButtonSpec.Visible = false;
                 temporaryButtonSpec.Visible = false;
                 closeButtonSpec.Visible = true;
+                focusSecondarySpec.Visible = true;
             }
             else
             {
                 if (switchType != SwitchType.Close)
                     Debug.WriteLine("This should not happen!");
 
+                focusSecondarySpec.Visible = false;
                 cloneButtonSpec.Visible = true;
                 secondaryButtonSpec.Visible = true;
                 temporaryButtonSpec.Visible = true;
