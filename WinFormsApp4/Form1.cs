@@ -73,7 +73,6 @@ namespace TeamsPlus
             };
             settings.CefCommandLineArgs.Add("enable-media-stream");
             settings.CefCommandLineArgs.Add("use-fake-ui-for-media-stream");
-            //settings.CefCommandLineArgs.Add("use-fake-ui-for-media-stream", "1");
             Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
 
             if (!File.Exists(configFile))
@@ -232,11 +231,18 @@ namespace TeamsPlus
 
                 bool cleanupUI = (GetOption("config", "cleanup", "true") == "true");
                 string headerBg = GetOption("theme", "headerbg", "");
+                string chatBg = GetOption("theme", "chatbg", "");
+                string chatBlend = GetOption("theme", "chatblend", "");
 
-                if (isSecondary && GetOption("config", "cleanup-secondary", "") != "")
-                    cleanupUI = (GetOption("config", "cleanup-secondary", "true") == "true");
-                if (isSecondary && GetOption("theme", "headerbg-secondary", "") != "")
+                if (isSecondary)
+                {
+                    if (GetOption("config", "cleanup-secondary", "") != "")
+                        cleanupUI = (GetOption("config", "cleanup-secondary", "true") == "true");
+
                     headerBg = GetOption("theme", "headerbg-secondary", "");
+                    chatBg = GetOption("theme", "chatbg-secondary", "");
+                    chatBlend = GetOption("theme", "chatblend-secondary", "");
+                }
 
                 if (pageURL.StartsWith("https://teams.live.com/"))
                 {
@@ -252,6 +258,26 @@ namespace TeamsPlus
                             currentBrowser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.background = \"{headerBg}\";");
                         else
                             currentBrowser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.backgroundImage = \"url({headerBg})\";");
+                    }
+
+                    if (chatBg != "")
+                    {
+                        if (chatBg[0] == '#')
+                        {
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"message-pane-layout\"]').style.background = \"{chatBg}\";");
+                        }
+                        else
+                        {
+                            if (chatBlend != "")
+                            {
+                                currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"message-pane-layout\"]').style.background = \"rgba(255,255,255,{chatBlend})\";");
+                                currentBrowser.ExecuteScriptAsync("document.querySelector('[data-tid=\"message-pane-layout\"]').style.backgroundBlendMode = \"lighten\";");
+                            }
+
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"message-pane-layout\"]').style.backgroundImage = \"url({chatBg})\";");
+                        }
+
+                        currentBrowser.ExecuteScriptAsync("document.getElementById(\"chat-pane-list\").style.background = \"rgba(255,255,255,0)\";");
                     }
                 }
                 else if (pageURL.StartsWith("https://teams.microsoft.com/v2/"))
