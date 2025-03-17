@@ -6,11 +6,19 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>favicon-f1722d9.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CefSharp.WinForms.NETCore" Version="123.0.60" />
-    <PackageReference Include="Krypton.Toolkit" Version="80.24.3.64" />
+    <Content Include="favicon-f1722d9.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CefSharp.WinForms.NETCore" Version="133.4.21" />
+    <PackageReference Include="chromiumembeddedframework.runtime.win-arm64" Version="133.4.2" />
+    <PackageReference Include="chromiumembeddedframework.runtime.win-x64" Version="133.4.2" />
+    <PackageReference Include="chromiumembeddedframework.runtime.win-x86" Version="133.4.2" />
+    <PackageReference Include="Krypton.Toolkit" Version="90.25.2.55" />
   </ItemGroup>
 
 </Project>

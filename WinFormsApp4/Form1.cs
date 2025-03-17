@@ -101,7 +101,10 @@ namespace TeamsPlus
 
         private void DebugClicked(object? sender, EventArgs e)
         {
-            browser.ShowDevTools();
+            if (Control.ModifierKeys == Keys.Shift && !kryptonSplitContainer1.Panel2Collapsed)
+                sideBrowser.ShowDevTools();
+            else
+                browser.ShowDevTools();
         }
 
         private void FocusClicked(object? sender, EventArgs e)
@@ -216,7 +219,7 @@ namespace TeamsPlus
             bool isSecondary = (currentBrowser != browser);
 
             string pageURL = currentBrowser.GetMainFrame().Url;
-            if (!e.IsLoading && (pageURL.StartsWith("https://teams.live.com/") || pageURL.StartsWith("https://teams.microsoft.com/v2/")))
+            if (!e.IsLoading && (pageURL.StartsWith("https://teams.live.com/v2/") || pageURL.StartsWith("https://teams.microsoft.com/v2/")))
             {
                 if (firstLoad && !isSecondary)
                 {
@@ -229,35 +232,53 @@ namespace TeamsPlus
                     Thread.Sleep(1000);
                 }
 
-                bool cleanupUI = (GetOption("config", "cleanup", "true") == "true");
                 string headerBg = GetOption("theme", "headerbg", "");
                 string chatBg = GetOption("theme", "chatbg", "");
                 string chatBlend = GetOption("theme", "chatblend", "");
 
                 if (isSecondary)
                 {
-                    if (GetOption("config", "cleanup-secondary", "") != "")
-                        cleanupUI = (GetOption("config", "cleanup-secondary", "true") == "true");
-
                     headerBg = GetOption("theme", "headerbg-secondary", "");
                     chatBg = GetOption("theme", "chatbg-secondary", "");
                     chatBlend = GetOption("theme", "chatblend-secondary", "");
                 }
 
-                if (pageURL.StartsWith("https://teams.live.com/"))
+                if (pageURL.StartsWith("https://teams.live.com/v2/"))
                 {
-                    if (cleanupUI)
-                    {
-                        currentBrowser.ExecuteScriptAsync("document.getElementsByTagName(\"app-bar-help-button\")[0].remove();");
-                        currentBrowser.ExecuteScriptAsync("document.getElementsByTagName(\"get-app-button\")[0].remove();");
-                    }
-
                     if (headerBg != "")
                     {
                         if (headerBg[0] == '#')
-                            currentBrowser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.background = \"{headerBg}\";");
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').style.background = \"{headerBg}\";");
                         else
-                            currentBrowser.ExecuteScriptAsync($"document.getElementsByTagName(\"app-header-bar\")[0].children[0].style.backgroundImage = \"url({headerBg})\";");
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').style.backgroundImage = \"url({headerBg})\";");
+                    }
+
+                    if (chatBg != "")
+                    {
+                        if (chatBg[0] == '#')
+                        {
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"message-pane-layout\"]').style.background = \"{chatBg}\";");
+                        }
+                        else
+                        {
+                            if (chatBlend != "")
+                            {
+                                currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"message-pane-layout\"]').style.background = \"rgba(255,255,255,{chatBlend})\";");
+                                currentBrowser.ExecuteScriptAsync("document.querySelector('[data-tid=\"message-pane-layout\"]').style.backgroundBlendMode = \"lighten\";");
+                            }
+
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"message-pane-layout\"]').style.backgroundImage = \"url({chatBg})\";");
+                        }
+                    }
+                }
+                else if (pageURL.StartsWith("https://teams.microsoft.com/v2/"))
+                {
+                    if (headerBg != "")
+                    {
+                        if (headerBg[0] == '#')
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"title-bar\"]').style.background = \"{headerBg}\";");
+                        else
+                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"title-bar\"]').style.backgroundImage = \"url({headerBg})\";");
                     }
 
                     if (chatBg != "")
@@ -277,17 +298,7 @@ namespace TeamsPlus
                             currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"message-pane-layout\"]').style.backgroundImage = \"url({chatBg})\";");
                         }
 
-                        currentBrowser.ExecuteScriptAsync("document.getElementById(\"chat-pane-list\").style.background = \"rgba(255,255,255,0)\";");
-                    }
-                }
-                else if (pageURL.StartsWith("https://teams.microsoft.com/v2/"))
-                {
-                    if (headerBg != "")
-                    {
-                        if (headerBg[0] == '#')
-                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').children[0].children[0].style.background = \"{headerBg}\";");
-                        else
-                            currentBrowser.ExecuteScriptAsync($"document.querySelector('[data-tid=\"app-layout-area--title-bar\"]').children[0].children[0].style.backgroundImage = \"url({headerBg})\";");
+                        //currentBrowser.ExecuteScriptAsync("document.getElementById(\"chat-pane-list\").style.background = \"rgba(255,255,255,0)\";");
                     }
                 }
             }
