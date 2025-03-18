@@ -84,6 +84,7 @@ namespace TeamsPlus
             settingsButtonSpec.Click += SettingsClicked;
             debugButtonSpec.Click += DebugClicked;
             focusButtonSpec.Click += FocusClicked;
+            focusSecondarySpec.Click += FocusClicked;
             aotButtonSpec.Click += aotClicked;
             cloneButtonSpec.Click += CloneClicked;
             secondaryButtonSpec.Click += SecondaryClicked;

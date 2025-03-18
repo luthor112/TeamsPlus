@@ -28,6 +28,7 @@ Currently implemented configuration values:
 - `theme.chatblend-secondary`, values: float between 0.0 and 0.1
 
 TODO:
+- Screenshot button
 - Notification handling
 
 Known bugs:
