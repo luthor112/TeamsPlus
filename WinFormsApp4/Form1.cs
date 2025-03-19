@@ -83,6 +83,8 @@ namespace TeamsPlus
 
             settingsButtonSpec.Click += SettingsClicked;
             debugButtonSpec.Click += DebugClicked;
+            chatListButtonSpec.Click += ChatListClicked;
+            chatListSecondarySpec.Click += ChatListClicked;
             focusButtonSpec.Click += FocusClicked;
             focusSecondarySpec.Click += FocusClicked;
             aotButtonSpec.Click += aotClicked;
@@ -106,6 +108,19 @@ namespace TeamsPlus
                 sideBrowser.ShowDevTools();
             else
                 browser.ShowDevTools();
+        }
+
+        private void ChatListClicked(object? sender, EventArgs e)
+        {
+            ButtonSpecAny clickedButton = (ButtonSpecAny)sender;
+            bool isSecondary = (clickedButton != chatListButtonSpec);
+
+            ChromiumWebBrowser currentBrowser = isSecondary ? sideBrowser : browser;
+
+            if (clickedButton.Checked == ButtonCheckState.Checked)
+                currentBrowser.ExecuteScriptAsync("document.querySelector('[data-tid=\"app-layout-area--sub-nav\"]').style.display = \"\";");
+            else
+                currentBrowser.ExecuteScriptAsync("document.querySelector('[data-tid=\"app-layout-area--sub-nav\"]').style.display = \"none\";");
         }
 
         private void FocusClicked(object? sender, EventArgs e)
@@ -194,6 +209,7 @@ namespace TeamsPlus
                 secondaryButtonSpec.Visible = false;
                 temporaryButtonSpec.Visible = false;
                 closeButtonSpec.Visible = true;
+                chatListSecondarySpec.Visible = true;
                 focusSecondarySpec.Visible = true;
             }
             else
@@ -201,6 +217,7 @@ namespace TeamsPlus
                 if (switchType != SwitchType.Close)
                     Debug.WriteLine("This should not happen!");
 
+                chatListSecondarySpec.Visible = false;
                 focusSecondarySpec.Visible = false;
                 cloneButtonSpec.Visible = true;
                 secondaryButtonSpec.Visible = true;

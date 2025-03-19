@@ -18,6 +18,7 @@ Currently implemented features:
   - Change background colour or background image of the chat pane
 - Links open in the default browser
 - Make the first video feed fill the whole window (`Focus` and `Focus Secondary` buttons)
+- Show/Hide the Chat List (`ChatList` and `ChatList Secondary` buttons)
 
 Currently implemented configuration values:
 - `theme.headerbg`, values: `#<HEX>, <URL>`

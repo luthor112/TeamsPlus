@@ -41,11 +41,13 @@
             closeButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             focusButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             focusSecondarySpec = new Krypton.Toolkit.ButtonSpecAny();
+            chatListButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
+            chatListSecondarySpec = new Krypton.Toolkit.ButtonSpecAny();
             separatorSpec1 = new Krypton.Toolkit.ButtonSpecAny();
             separatorSpec2 = new Krypton.Toolkit.ButtonSpecAny();
             ((System.ComponentModel.ISupportInitialize)kryptonSplitContainer1).BeginInit();
-            kryptonSplitContainer1.Panel1.BeginInit();
-            kryptonSplitContainer1.Panel2.BeginInit();
+            (kryptonSplitContainer1.Panel1).BeginInit();
+            (kryptonSplitContainer1.Panel2).BeginInit();
             SuspendLayout();
             // 
             // separatorSpec1
@@ -70,7 +72,6 @@
             // 
             kryptonSplitContainer1.Dock = DockStyle.Fill;
             kryptonSplitContainer1.Location = new Point(0, 0);
-            kryptonSplitContainer1.Name = "kryptonSplitContainer1";
             kryptonSplitContainer1.PaletteMode = Krypton.Toolkit.PaletteMode.Office2007BlackDarkMode;
             // 
             // 
@@ -82,8 +83,8 @@
             kryptonSplitContainer1.Panel2.PaletteMode = Krypton.Toolkit.PaletteMode.Office2007BlackDarkMode;
             kryptonSplitContainer1.Panel2Collapsed = true;
             kryptonSplitContainer1.SeparatorStyle = Krypton.Toolkit.SeparatorStyle.HighProfile;
-            kryptonSplitContainer1.Size = new Size(1119, 675);
-            kryptonSplitContainer1.SplitterDistance = 500;
+            kryptonSplitContainer1.Size = new Size(1121, 669);
+            kryptonSplitContainer1.SplitterDistance = 373;
             kryptonSplitContainer1.TabIndex = 1;
             // 
             // cloneButtonSpec
@@ -140,6 +141,19 @@
             focusSecondarySpec.UniqueName = "168ceb6afd864b3c832b126e50c74bcd";
             focusSecondarySpec.Visible = false;
             // 
+            // chatListButtonSpec
+            // 
+            chatListButtonSpec.Checked = Krypton.Toolkit.ButtonCheckState.Checked;
+            chatListButtonSpec.Text = "ChatList";
+            chatListButtonSpec.UniqueName = "8b8cc45bae4d46a7bc594ab8d2d5c80f";
+            // 
+            // chatListSecondarySpec
+            // 
+            chatListSecondarySpec.Checked = Krypton.Toolkit.ButtonCheckState.Checked;
+            chatListSecondarySpec.Text = "ChatList Secondary";
+            chatListSecondarySpec.UniqueName = "2e8eba05faa540b7b49196e27a651ec2";
+            chatListSecondarySpec.Visible = false;
+            // 
             // Form1
             // 
             AllowButtonSpecToolTips = true;
@@ -148,6 +162,8 @@
             ButtonSpecs.Add(settingsButtonSpec);
             ButtonSpecs.Add(debugButtonSpec);
             ButtonSpecs.Add(separatorSpec1);
+            ButtonSpecs.Add(chatListButtonSpec);
+            ButtonSpecs.Add(chatListSecondarySpec);
             ButtonSpecs.Add(focusButtonSpec);
             ButtonSpecs.Add(focusSecondarySpec);
             ButtonSpecs.Add(aotButtonSpec);
@@ -156,7 +172,7 @@
             ButtonSpecs.Add(secondaryButtonSpec);
             ButtonSpecs.Add(temporaryButtonSpec);
             ButtonSpecs.Add(closeButtonSpec);
-            ClientSize = new Size(1119, 675);
+            ClientSize = new Size(1121, 669);
             Controls.Add(kryptonSplitContainer1);
             FormTitleAlign = Krypton.Toolkit.PaletteRelativeAlign.Inherit;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -164,8 +180,8 @@
             PaletteMode = Krypton.Toolkit.PaletteMode.Office2007BlackDarkMode;
             Text = "Form1";
             Load += Form1_Load;
-            kryptonSplitContainer1.Panel1.EndInit();
-            kryptonSplitContainer1.Panel2.EndInit();
+            (kryptonSplitContainer1.Panel1).EndInit();
+            (kryptonSplitContainer1.Panel2).EndInit();
             ((System.ComponentModel.ISupportInitialize)kryptonSplitContainer1).EndInit();
             ResumeLayout(false);
         }
@@ -183,5 +199,7 @@
         private Krypton.Toolkit.ButtonSpecAny closeButtonSpec;
         private Krypton.Toolkit.ButtonSpecAny focusButtonSpec;
         private Krypton.Toolkit.ButtonSpecAny focusSecondarySpec;
+        private Krypton.Toolkit.ButtonSpecAny chatListButtonSpec;
+        private Krypton.Toolkit.ButtonSpecAny chatListSecondarySpec;
     }
 }
