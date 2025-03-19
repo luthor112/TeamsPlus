@@ -5,6 +5,7 @@ using Krypton.Toolkit;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TeamsPlus
 {
@@ -87,6 +88,8 @@ namespace TeamsPlus
             chatListSecondarySpec.Click += ChatListClicked;
             focusButtonSpec.Click += FocusClicked;
             focusSecondarySpec.Click += FocusClicked;
+            screenshotButtonSpec.Click += ScreenshotClicked;
+            screenshotSecondarySpec.Click += ScreenshotClicked;
             aotButtonSpec.Click += aotClicked;
             cloneButtonSpec.Click += CloneClicked;
             secondaryButtonSpec.Click += SecondaryClicked;
@@ -134,6 +137,26 @@ namespace TeamsPlus
                 currentBrowser.ExecuteScriptAsync("document.getElementsByTagName(\"video\")[0].requestFullscreen();");
             else
                 currentBrowser.ExecuteScriptAsync("document.exitFullscreen();");
+        }
+
+        private async void ScreenshotClicked(object? sender, EventArgs e)
+        {
+            ButtonSpecAny clickedButton = (ButtonSpecAny)sender;
+            bool isSecondary = (clickedButton != screenshotButtonSpec);
+
+            ChromiumWebBrowser currentBrowser = isSecondary ? sideBrowser : browser;
+
+            if (Control.ModifierKeys == Keys.Shift)
+                await currentBrowser.EvaluateScriptAsync("document.querySelector('[data-tid=\"app-layout-area--sub-nav\"]').style.display = \"none\";");
+
+            byte[] screenshot = await currentBrowser.CaptureScreenshotAsync();
+            Image img;
+            using (var ms = new MemoryStream(screenshot))
+                img = Image.FromStream(ms);
+            Clipboard.SetImage(img);
+
+            if (Control.ModifierKeys == Keys.Shift)
+                currentBrowser.ExecuteScriptAsync("document.querySelector('[data-tid=\"app-layout-area--sub-nav\"]').style.display = \"\";");
         }
 
         private void aotClicked(object? sender, EventArgs e)
@@ -211,6 +234,7 @@ namespace TeamsPlus
                 closeButtonSpec.Visible = true;
                 chatListSecondarySpec.Visible = true;
                 focusSecondarySpec.Visible = true;
+                screenshotSecondarySpec.Visible = true;
             }
             else
             {
@@ -219,6 +243,7 @@ namespace TeamsPlus
 
                 chatListSecondarySpec.Visible = false;
                 focusSecondarySpec.Visible = false;
+                screenshotSecondarySpec.Visible = false;
                 cloneButtonSpec.Visible = true;
                 secondaryButtonSpec.Visible = true;
                 temporaryButtonSpec.Visible = true;

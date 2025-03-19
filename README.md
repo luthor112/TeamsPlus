@@ -19,6 +19,8 @@ Currently implemented features:
 - Links open in the default browser
 - Make the first video feed fill the whole window (`Focus` and `Focus Secondary` buttons)
 - Show/Hide the Chat List (`ChatList` and `ChatList Secondary` buttons)
+- Take Screenshot (`ScrShot` and `ScrShot Secondary` buttons)
+  - Hold Shift to hide the Chat List while taking the screenshot
 
 Currently implemented configuration values:
 - `theme.headerbg`, values: `#<HEX>, <URL>`
@@ -29,7 +31,6 @@ Currently implemented configuration values:
 - `theme.chatblend-secondary`, values: float between 0.0 and 0.1
 
 TODO:
-- Screenshot button
 - Notification handling
 
 Known bugs:
