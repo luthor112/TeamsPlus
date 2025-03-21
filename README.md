@@ -26,9 +26,9 @@ Currently implemented configuration values:
 - `theme.headerbg`, values: `#<HEX>, <URL>`
 - `theme.headerbg-secondary`, values: `#<HEX>, <URL>`
 - `theme.chatbg`, values: `#<HEX>, <URL>`
-- `theme.chatblend`, values: float between 0.0 and 0.1
+- `theme.chatblend`, values: float between 0.0 and 1.0
 - `theme.chatbg-secondary`, values: `#<HEX>, <URL>`
-- `theme.chatblend-secondary`, values: float between 0.0 and 0.1
+- `theme.chatblend-secondary`, values: float between 0.0 and 1.0
 
 TODO:
 - Notification handling
