@@ -6,6 +6,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace TeamsPlus
 {
@@ -17,6 +19,7 @@ namespace TeamsPlus
         Close
     }
 
+    // This has to be the first class in the file, because MS
     public partial class Form1 : KryptonForm
     {
         #region P/Invoke
@@ -35,6 +38,11 @@ namespace TeamsPlus
             string lpKeyName,
             string lpString,
             string lpFileName);
+
+        [DllImport("user32.dll")]
+        static extern int ShowWindow(IntPtr hWnd, uint Msg);
+
+        const uint SW_RESTORE = 0x09;
         #endregion
 
         string configFile;
@@ -81,6 +89,8 @@ namespace TeamsPlus
                 Directory.CreateDirectory(Path.GetDirectoryName(configFile));
                 File.WriteAllText(configFile, "[config]\n\n[theme]\n");
             }
+
+            ToastNotificationManagerCompat.OnActivated += ToastNotificationActivated;
 
             settingsButtonSpec.Click += SettingsClicked;
             debugButtonSpec.Click += DebugClicked;
@@ -262,7 +272,7 @@ namespace TeamsPlus
             bool isSecondary = (currentBrowser != browser);
 
             string pageURL = currentBrowser.GetMainFrame().Url;
-            if (!e.IsLoading && (pageURL.StartsWith("https://teams.live.com/v2/") || pageURL.StartsWith("https://teams.microsoft.com/v2/")))
+            if (!e.IsLoading && (pageURL.StartsWith("https://teams.live.com/v2") || pageURL.StartsWith("https://teams.microsoft.com/v2")))
             {
                 if (firstLoad && !isSecondary)
                 {
@@ -275,18 +285,25 @@ namespace TeamsPlus
                     Thread.Sleep(1000);
                 }
 
+                bool handleNotifications = (GetOption("config", "notifications", "true") == "true");
+
                 string headerBg = GetOption("theme", "headerbg", "");
                 string chatBg = GetOption("theme", "chatbg", "");
                 string chatBlend = GetOption("theme", "chatblend", "");
 
                 if (isSecondary)
                 {
+                    handleNotifications = (GetOption("config", "notifications-secondary", "true") == "true");
+
                     headerBg = GetOption("theme", "headerbg-secondary", "");
                     chatBg = GetOption("theme", "chatbg-secondary", "");
                     chatBlend = GetOption("theme", "chatblend-secondary", "");
                 }
 
-                if (pageURL.StartsWith("https://teams.live.com/v2/"))
+                if (handleNotifications)
+                    InjectNotificationAPI(currentBrowser);
+
+                if (pageURL.StartsWith("https://teams.live.com/v2"))
                 {
                     if (headerBg != "")
                     {
@@ -314,7 +331,7 @@ namespace TeamsPlus
                         }
                     }
                 }
-                else if (pageURL.StartsWith("https://teams.microsoft.com/v2/"))
+                else if (pageURL.StartsWith("https://teams.microsoft.com/v2"))
                 {
                     if (headerBg != "")
                     {
@@ -351,5 +368,68 @@ namespace TeamsPlus
         {
             Invoke(() => Text = e.Title);
         }
+
+        #region Notification handling
+        private void InjectNotificationAPI(ChromiumWebBrowser browser)
+        {
+            browser.ExecuteScriptAsync(@"(function(){ class Notification {
+                static permission = 'granted';
+                static maxActions = 2;
+                static name = 'Notification';
+                constructor(title, options) {
+                    let packageSet = new Set();
+                    packageSet.add(title).add(options);
+                    let json_package = JSON.stringify([...packageSet]);
+                    CefSharp.PostMessage(json_package);
+                }
+                static requestPermission() {
+                    return new Promise((res, rej) => {
+                        res('granted');
+                    })
+                }   
+            };
+            window.Notification = Notification;
+            })();");
+
+            browser.JavascriptMessageReceived -= OnBrowserJavascriptMessageReceived;
+            browser.JavascriptMessageReceived += OnBrowserJavascriptMessageReceived;
+        }
+
+        private void OnBrowserJavascriptMessageReceived(object? sender, JavascriptMessageReceivedEventArgs e)
+        {
+            object[] objArray = JsonConvert.DeserializeObject<object[]>(e.Message.ToString());
+            string title = objArray[0] as string;
+            NotificationOptions options = new NotificationOptions();
+            if (objArray[1] != null)
+                options = JsonConvert.DeserializeObject<NotificationOptions>(objArray[1].ToString());
+
+            Debug.WriteLine("Notification title: " + title + "; body: " + options.body);
+            //notifyIcon1.ShowBalloonTip(5000, title, options.body, ToolTipIcon.Info);
+            new ToastContentBuilder().AddText(title).AddText(options.body).Show();
+        }
+
+        private void ToastNotificationActivated(ToastNotificationActivatedEventArgsCompat e)
+        {
+            Invoke(ShowThis);
+        }
+        #endregion
+
+        private void ShowThis()
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+                ShowWindow(this.Handle, SW_RESTORE);
+            else
+                this.Activate();
+        }
+
+        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            ShowThis();
+        }
+    }
+
+    public class NotificationOptions
+    {
+        public string body { get; set; }
     }
 }

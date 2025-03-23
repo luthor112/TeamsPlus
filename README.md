@@ -21,17 +21,17 @@ Currently implemented features:
 - Show/Hide the Chat List (`ChatList` and `ChatList Secondary` buttons)
 - Take Screenshot (`ScrShot` and `ScrShot Secondary` buttons)
   - Hold Shift to hide the Chat List while taking the screenshot
+- Handle notifications
 
 Currently implemented configuration values:
+- `config.notifications`, values: `true, false`
+- `config.notifications-secondary`, values: `true, false`
 - `theme.headerbg`, values: `#<HEX>, <URL>`
 - `theme.headerbg-secondary`, values: `#<HEX>, <URL>`
 - `theme.chatbg`, values: `#<HEX>, <URL>`
 - `theme.chatblend`, values: float between 0.0 and 1.0
 - `theme.chatbg-secondary`, values: `#<HEX>, <URL>`
 - `theme.chatblend-secondary`, values: float between 0.0 and 1.0
-
-TODO:
-- Notification handling
 
 Known bugs:
 - `Focus` button sporadically doesn't work

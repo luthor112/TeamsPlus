@@ -14,3 +14,13 @@ NOTICE AND ATTRIBUTION
   - License file: LICENSES/KRYPTON
   - Obtained from: https://www.nuget.org/packages/Krypton.Toolkit/80.24.3.64
   - Copyright: (c) 2017 - 2023, Krypton Suite
+- Newtonsoft.Json
+  - License: MIT
+  - License file: LICENSES/JSON
+  - Obtained from: https://www.nuget.org/packages/Newtonsoft.Json/13.0.3
+  - Copyright: (c) 2007 James Newton-King
+- Microsoft.Toolkit.Uwp.Notifications
+  - License: MIT
+  - License file: LICENSES/TOOLKIT
+  - Obtained from: https://www.nuget.org/packages/Microsoft.Toolkit.Uwp.Notifications/7.1.3
+  - Copyright: © .NET Foundation and Contributors

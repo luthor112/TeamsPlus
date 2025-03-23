@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             Krypton.Toolkit.ButtonSpecAny separatorSpec1;
             Krypton.Toolkit.ButtonSpecAny separatorSpec2;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
@@ -45,6 +46,7 @@
             chatListSecondarySpec = new Krypton.Toolkit.ButtonSpecAny();
             screenshotButtonSpec = new Krypton.Toolkit.ButtonSpecAny();
             screenshotSecondarySpec = new Krypton.Toolkit.ButtonSpecAny();
+            notifyIcon1 = new NotifyIcon(components);
             separatorSpec1 = new Krypton.Toolkit.ButtonSpecAny();
             separatorSpec2 = new Krypton.Toolkit.ButtonSpecAny();
             ((System.ComponentModel.ISupportInitialize)kryptonSplitContainer1).BeginInit();
@@ -85,8 +87,8 @@
             kryptonSplitContainer1.Panel2.PaletteMode = Krypton.Toolkit.PaletteMode.Office2007BlackDarkMode;
             kryptonSplitContainer1.Panel2Collapsed = true;
             kryptonSplitContainer1.SeparatorStyle = Krypton.Toolkit.SeparatorStyle.HighProfile;
-            kryptonSplitContainer1.Size = new Size(1123, 663);
-            kryptonSplitContainer1.SplitterDistance = 374;
+            kryptonSplitContainer1.Size = new Size(1133, 633);
+            kryptonSplitContainer1.SplitterDistance = 377;
             kryptonSplitContainer1.TabIndex = 1;
             // 
             // cloneButtonSpec
@@ -167,6 +169,13 @@
             screenshotSecondarySpec.UniqueName = "1ae595da9ae24cd2872663149e7bb1c0";
             screenshotSecondarySpec.Visible = false;
             // 
+            // notifyIcon1
+            // 
+            notifyIcon1.Icon = (Icon)resources.GetObject("notifyIcon1.Icon");
+            notifyIcon1.Text = "Teams Plus";
+            notifyIcon1.Visible = true;
+            notifyIcon1.DoubleClick += notifyIcon1_DoubleClick;
+            // 
             // Form1
             // 
             AllowButtonSpecToolTips = true;
@@ -187,7 +196,7 @@
             ButtonSpecs.Add(secondaryButtonSpec);
             ButtonSpecs.Add(temporaryButtonSpec);
             ButtonSpecs.Add(closeButtonSpec);
-            ClientSize = new Size(1123, 663);
+            ClientSize = new Size(1133, 633);
             Controls.Add(kryptonSplitContainer1);
             FormTitleAlign = Krypton.Toolkit.PaletteRelativeAlign.Inherit;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -218,5 +227,6 @@
         private Krypton.Toolkit.ButtonSpecAny chatListSecondarySpec;
         private Krypton.Toolkit.ButtonSpecAny screenshotButtonSpec;
         private Krypton.Toolkit.ButtonSpecAny screenshotSecondarySpec;
+        private NotifyIcon notifyIcon1;
     }
 }
