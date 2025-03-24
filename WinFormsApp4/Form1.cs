@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.Toolkit.Uwp.Notifications;
+using System.Net;
 
 namespace TeamsPlus
 {
@@ -47,6 +48,7 @@ namespace TeamsPlus
 
         string configFile;
         string rootCache;
+        string imageCache;
         ChromiumWebBrowser browser;
         ChromiumWebBrowser sideBrowser;
 
@@ -56,6 +58,7 @@ namespace TeamsPlus
         public Form1()
         {
             rootCache = Path.Join(Path.GetTempPath(), "TeamsPlusCefRoot");
+            imageCache = Path.Join(Path.GetTempPath(), "TeamsPlusImageCache");
             configFile = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "teamsplus", "config.ini");
             InitializeComponent();
         }
@@ -89,6 +92,7 @@ namespace TeamsPlus
                 Directory.CreateDirectory(Path.GetDirectoryName(configFile));
                 File.WriteAllText(configFile, "[config]\n\n[theme]\n");
             }
+            Directory.CreateDirectory(imageCache);
 
             ToastNotificationManagerCompat.OnActivated += ToastNotificationActivated;
 
@@ -402,15 +406,36 @@ namespace TeamsPlus
             NotificationOptions options = new NotificationOptions();
             if (objArray[1] != null)
                 options = JsonConvert.DeserializeObject<NotificationOptions>(objArray[1].ToString());
+            Debug.WriteLine("Notification title: " + title + "; options: " + objArray[1].ToString());
 
-            Debug.WriteLine("Notification title: " + title + "; body: " + options.body);
-            //notifyIcon1.ShowBalloonTip(5000, title, options.body, ToolTipIcon.Info);
-            new ToastContentBuilder().AddText(title).AddText(options.body).Show();
+            if (!string.IsNullOrEmpty(options.icon))
+                new ToastContentBuilder().AddText(title).AddText(options.body).AddAppLogoOverride(GetChacheUri(options.icon), ToastGenericAppLogoCrop.Circle).Show();
+            else
+                new ToastContentBuilder().AddText(title).AddText(options.body).Show();
         }
 
         private void ToastNotificationActivated(ToastNotificationActivatedEventArgsCompat e)
         {
             Invoke(ShowThis);
+        }
+
+        private Uri GetChacheUri(string url)
+        {
+            string localFilename = Path.Join(imageCache, DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString());
+
+            if (url.StartsWith("data:image/") && url.Contains(";base64,"))
+            {
+                string encodedValue = url.Substring(url.IndexOf(";base64,") + 8);
+                byte[] binData = Convert.FromBase64String(encodedValue);
+                File.WriteAllBytes(localFilename, binData);
+            }
+            else
+            {
+                using (WebClient client = new WebClient())
+                    client.DownloadFile(url, localFilename);
+            }
+
+            return new Uri(new Uri("file://"), localFilename);
         }
         #endregion
 
@@ -431,5 +456,6 @@ namespace TeamsPlus
     public class NotificationOptions
     {
         public string body { get; set; }
+        public string icon {  get; set; }
     }
 }
